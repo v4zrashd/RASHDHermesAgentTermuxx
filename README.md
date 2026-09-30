@@ -1,61 +1,165 @@
 <div align="center">
 
-# ⚡ V4Z Hermes Termux
+![V4Z Hermes Termux](assets/banner.png)
 
-### Run a self-evolving AI assistant on your Android phone
+# ⚡ V4Z Hermes Termux — Hermes Agent for Android (Termux)
 
-![Termux](https://img.shields.io/badge/Termux-Android-6f42c1?style=for-the-badge)
-![License](https://img.shields.io/badge/license-MIT-9146ff?style=for-the-badge)
-![Made by](https://img.shields.io/badge/made%20by-V4Z%20RASHD-00ff88?style=for-the-badge)
+### Run a self-evolving AI assistant on your phone
 
-**Transform your Android device into a portable AI assistant — no server, no fees.**
+[![License: MIT](https://img.shields.io/badge/license-MIT-9146ff?style=for-the-badge)](LICENSE)
+[![Termux](https://img.shields.io/badge/Termux-Android-6f42c1?style=for-the-badge)](https://termux.com)
+[![Version](https://img.shields.io/badge/version-v1.0.0-00ff88?style=for-the-badge)](https://github.com/v4zrashd/RASHDHermesAgentTermuxx)
+[![Made by](https://img.shields.io/badge/made%20by-V4Z%20RASHD-ff00aa?style=for-the-badge)](https://github.com/v4zrashd)
+
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=22&pause=1000&color=00FF88&center=true&vCenter=true&width=650&lines=Your+pocket+AI+assistant+is+here;Self-learning.+Always+with+you.;One+command.+Zero+servers.;Built+by+V4Z+RASHD)](https://git.io/typing-svg)
+
+**Transform your Android device into a powerful, learning AI assistant — no server, no fees.**
 
 </div>
 
 ---
 
-## ✨ What is this?
+## ✨ What is Hermes Agent?
 
-**V4Z Hermes Termux** is a one-command installer that sets up the open-source **Hermes Agent**
-(an AI framework by Nous Research) inside an Ubuntu container on Termux, and gives you a
-simple `hermes` command to talk to it — straight from your phone.
+**Hermes Agent** is an open-source, self-evolving AI framework created by **Nous Research**.
+Think of it as *Jarvis in your pocket* — an AI that learns, adapts, and gets smarter
+with every conversation.
 
-| 🧠 Self-learning | 📱 Portable | 🔒 Private | 🛠️ Extensible |
+**V4Z Hermes Termux** is my installer that sets all of it up on your phone automatically:
+Ubuntu container, Python environment, the agent itself, and a one-word `hermes` launcher.
+
+| 🧠 Self-learning | 🔄 Cross-platform | 💾 Persistent memory | 🛠️ 70+ tools |
 |---|---|---|---|
-| Gets smarter over time | Your assistant, everywhere | Runs on your device | 70+ tools |
+| Gets smarter over time | Runs on 16+ apps | Remembers your preferences | Executes complex tasks |
 
 ---
 
-## 🚀 One-line install
+## ⏱️ Installation takes ~5–15 minutes — grab a coffee! ☕
 
-Paste this in **Termux**:
+```mermaid
+graph LR
+    A[📱 Open Termux] --> B[📋 Copy Command]
+    B --> C[⚡ Paste & Run]
+    C --> D[🔄 Auto-Install]
+    D --> E[✅ Ready to Use!]
+```
+
+---
+
+## 🚀 One-line installation
+
+Copy and paste this in **Termux**:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDHermesAgentTermuxx/main/install.sh | bash
 ```
 
-Takes ~5–15 minutes depending on your connection. Grab a coffee ☕
+That's it. The script does everything: updates Termux, sets up Ubuntu, installs Python,
+clones the agent, and creates your `hermes` command.
 
-### Manual install
+---
+
+## 🛠️ Manual installation
+
+Prefer doing it yourself? Step by step:
 
 ```bash
 pkg install git
+```
+
+```bash
+# 1. Clone this repository
 git clone https://github.com/v4zrashd/RASHDHermesAgentTermuxx.git
 cd RASHDHermesAgentTermuxx
+
+# 2. Make the script executable
 chmod +x install.sh
+
+# 3. Run the installer
 ./install.sh
 ```
 
 ---
 
-## 🤖 Usage
+## 📱 Full Termux step-by-step guide
 
-After installing, just type in Termux:
+Everything at command level — from a fresh Termux install to a working agent.
+Run these **one by one** in Termux.
+
+### 1️⃣ Set up Termux (first time)
 
 ```bash
-hermes setup     # first-time setup (pick your model provider)
+# Allow storage access (grant the popup on your phone)
+termux-setup-storage
+```
+
+### 2️⃣ Update all packages
+
+```bash
+pkg update -y
+pkg upgrade -y
+```
+
+### 3️⃣ Core packages
+
+```bash
+pkg install -y proot-distro git curl
+```
+
+### 4️⃣ Install Ubuntu container
+
+```bash
+proot-distro install ubuntu
+proot-distro login ubuntu
+```
+
+### 5️⃣ Inside Ubuntu — Python toolchain
+
+```bash
+apt update && apt install -y python3 python3-pip python3-venv git curl build-essential
+```
+
+### 6️⃣ Clone & install the agent
+
+```bash
+git clone --depth 1 https://github.com/NousResearch/hermes-agent.git ~/hermes-agent
+cd ~/hermes-agent
+python3 -m venv venv && source venv/bin/activate
+pip install -e ".[all]"
+```
+
+### 7️⃣ Run it
+
+```bash
+hermes setup   # first-time setup
+hermes         # start chatting
+```
+
+> 💡 **Or skip all of the above** — the one-line installer does steps 1–7 for you automatically.
+
+---
+
+## 🔁 What the installer sets up
+
+| Purpose | Details |
+|---|---|
+| Base update | `pkg update && pkg upgrade` |
+| Storage access | `termux-setup-storage` |
+| Container | Ubuntu via `proot-distro` (reuses yours if it exists) |
+| Python | 3.11–3.13 (auto-fetches 3.13 via `uv` if Ubuntu ships 3.14+) |
+| Agent | Cloned from `NousResearch/hermes-agent`, installed in a venv |
+| Launcher | `hermes` command works directly from Termux |
+
+---
+
+## 🤖 Start the agent
+
+After installing, from Termux:
+
+```bash
+hermes setup     # first-time setup — choose your model provider
 hermes           # start chatting
-hermes gateway   # run the gateway
+hermes gateway   # run the gateway mode
 ```
 
 ### Manual path (if the wrapper is missing)
@@ -74,25 +178,39 @@ hermes
 curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDHermesAgentTermuxx/main/uninstall.sh | bash
 ```
 
-Removes the agent, the launchers, and (optionally) the Ubuntu container. Termux itself is never touched.
+Removes the agent, launchers, and optionally the Ubuntu container (it asks first).
+Termux itself is never touched.
 
 ---
 
-## ⚙️ Requirements
+## ⚙️ System requirements
 
-| | Minimum | Recommended |
+| Requirement | Minimum | Recommended |
 |---|---|---|
-| Android | 11 | 13 / 14 / 15 |
+| Android version | 11 | 13 / 14 / 15 |
 | Storage | 3 GB | 5 GB+ |
 | RAM | 2 GB | 4 GB+ |
-| Termux | Latest (F-Droid) | Latest (F-Droid) |
+| Internet | Required | Fast connection |
+| Termux | Latest from F-Droid | Latest from F-Droid |
 
 ---
 
-## 🎛️ Model freedom
+## 🌍 Why run Hermes on Android?
 
-Works with 200+ models — OpenAI, Anthropic Claude, Google Gemini, DeepSeek, Qwen —
-or fully local models via Ollama:
+| Benefit | Description |
+|---|---|
+| 📱 Portable AI | Your assistant goes everywhere with you |
+| 🔒 Privacy | Runs on your own device |
+| 💰 Cost-effective | No server hosting fees |
+| ⚡ Low latency | Direct on-device execution |
+| 🔄 Always available | Works offline with local models |
+
+---
+
+## 🎛️ AI model freedom
+
+Works with 200+ models: **OpenAI** (GPT-4), **Anthropic** (Claude), **Google** (Gemini),
+**DeepSeek**, **Qwen** — or fully local models via Ollama:
 
 ```bash
 pkg install ollama
@@ -106,13 +224,14 @@ ollama run gemma3:4b
 
 - **Nous Research** — creators of the open-source Hermes Agent framework
 - **Termux team** — for making Android development possible
-- **V4Z RASHD** — installer, scripts & docs in this repo
+- **Open-source community** — for the countless tools this is built on
+- **V4Z RASHD** — installer scripts, branding & docs in this repo
 
 ---
 
 <div align="center">
 
-**⭐ Star this repo if it helped you!**
+## ⭐ If this helped you, give it a star! ⭐
 
 Made with ⚡ by [V4Z RASHD](https://github.com/v4zrashd)
 
