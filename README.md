@@ -1,6 +1,6 @@
 <div align="center">
 
-![V4Z Hermes Termux](assets/banner.png)
+![V4Z Hermes Termux](https://i.ibb.co/m5pPzNX7/V4-Z-Hermes-Termux-banner.jpg)
 
 # ⚡ V4Z Hermes Termux — Hermes Agent for Android (Termux)
 
