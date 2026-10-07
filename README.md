@@ -8,7 +8,7 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-9146ff?style=for-the-badge)](LICENSE)
 [![Termux](https://img.shields.io/badge/Termux-Android-6f42c1?style=for-the-badge)](https://termux.com)
-[![Version](https://img.shields.io/badge/version-v1.0.0-00ff88?style=for-the-badge)](https://github.com/v4zrashd/RASHDHermesAgentTermuxx)
+[![Version](https://img.shields.io/badge/version-v1.1.0-00ff88?style=for-the-badge)](https://github.com/v4zrashd/RASHDHermesAgentTermuxx)
 [![Made by](https://img.shields.io/badge/made%20by-V4Z%20RASHD-ff00aa?style=for-the-badge)](https://github.com/v4zrashd)
 
 [![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=22&pause=1000&color=00FF88&center=true&vCenter=true&width=650&lines=Your+pocket+AI+assistant+is+here;Self-learning.+Always+with+you.;One+command.+Zero+servers.;Built+by+V4Z+RASHD)](https://git.io/typing-svg)
@@ -172,6 +172,13 @@ hermes
 
 ---
 
+## 🆕 What's new in v1.1.0
+
+- **Everything in one go** — the installer now pulls the complete dependency set for your Python version plus Hermes Agent's official `[termux-all]` profile. No more `ModuleNotFoundError` (e.g. `ruamel`) after install, and nothing to install one-by-one later.
+- **Everyday toolbox included** — Node.js, npm, ripgrep, ffmpeg, unzip/zip, tar and nano are installed up front for the agent's tools.
+- **Self-check + self-heal** — before declaring success, the installer imports the agent's entry points; if anything is somehow still missing, it installs it automatically and checks again, then runs `hermes --version` as a final smoke test.
+- Re-running the installer safely repairs or updates an existing install.
+
 ## 🗑️ Uninstall
 
 ```bash
@@ -226,6 +233,7 @@ ollama run gemma3:4b
 - **Termux team** — for making Android development possible
 - **Open-source community** — for the countless tools this is built on
 - **V4Z RASHD** — installer scripts, branding & docs in this repo
+- **W8SOJIB** — public Termux guide ideas this installer was benchmarked against (the implementation here is original)
 
 ---
 
