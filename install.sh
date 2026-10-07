@@ -2,7 +2,7 @@
 #
 # ============================================================
 #  V4Z Hermes Termux — Hermes Agent installer for Termux
-#  Version : v1.1.0 (full-auto deps + self-heal)
+#  Version : v1.1.1 (busy-container fix + visible apt retries)
 #  Author : V4Z RASHD (https://github.com/v4zrashd)
 #  Repo   : https://github.com/v4zrashd/RASHDHermesAgentTermuxx
 # ============================================================
@@ -35,7 +35,7 @@ die()  { echo -e "${RED}❌ $*${RST}"; exit 1; }
 
 clear 2>/dev/null || true
 echo -e "${MAG}╔══════════════════════════════════════════════╗${RST}"
-echo -e "${MAG}║${RST}  ${GRN}V4Z HERMES TERMUX — installer v1.1${RST}          ${MAG}║${RST}"
+echo -e "${MAG}║${RST}  ${GRN}V4Z HERMES TERMUX — installer v1.1.1${RST}        ${MAG}║${RST}"
 echo -e "${MAG}║${RST}  ${CYN}by V4Z RASHD${RST}                               ${MAG}║${RST}"
 echo -e "${MAG}╚══════════════════════════════════════════════╝${RST}"
 echo ""
@@ -52,12 +52,26 @@ pkg install -y proot-distro git curl 2>&1 | tail -n 1
 
 # ---------- Ubuntu container ----------
 DISTRO="ubuntu"
-if proot-distro list 2>/dev/null | grep -qiE '^[[:space:]]*\*?[[:space:]]*ubuntu([[:space:]]|$)'; then
+# Existing container? Check the rootfs on disk first — parsing
+# `proot-distro list` output alone misses installs (and trying to
+# reinstall over a *busy* container hard-fails). If an Ubuntu login
+# is still open in another Termux tab, close that tab first.
+container_exists() {
+    [ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/$DISTRO" ] && return 0
+    [ -d "$PREFIX/var/lib/proot-distro/containers/$DISTRO" ] && return 0
+    proot-distro list 2>/dev/null | grep -qiE '^[[:space:]]*\*?[[:space:]]*ubuntu([[:space:]]|$)' && return 0
+    return 1
+}
+if container_exists; then
     ok "Reusing existing Ubuntu container"
 else
     say "🐧 Installing Ubuntu container (a few minutes, grab a coffee ☕)..."
     proot-distro install ubuntu 2>&1 | tail -n 2 || warn "container install reported an issue — trying to continue"
-    ok "Ubuntu container ready"
+    if container_exists; then
+        ok "Ubuntu container ready"
+    else
+        die "Ubuntu container could not be installed — send a screenshot of the error above."
+    fi
 fi
 
 # ---------- everything below runs INSIDE Ubuntu ----------
@@ -70,18 +84,33 @@ set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 export PIP_DISABLE_PIP_VERSION_CHECK=1
 
+# apt with retries and VISIBLE errors — a busy container can hold
+# the dpkg lock for a while, and silent installs hide the real cause.
+apt_install() {
+    local n=1
+    while [ "$n" -le 3 ]; do
+        if apt-get install -y -o Dpkg::Options::="--force-confold" "$@"; then
+            return 0
+        fi
+        echo "↻ apt install hit a problem (try $n/3) — waiting 10s and retrying..."
+        sleep 10
+        n=$((n+1))
+    done
+    return 1
+}
+
 echo "📦 Updating Ubuntu..."
-apt-get update -qq
+apt-get update || { echo "⚠️ apt update hiccup — retrying once..."; sleep 5; apt-get update || true; }
 apt-get upgrade -y -o Dpkg::Options::="--force-confold" >/dev/null 2>&1 || true
 
 echo "🐍 Installing Python + build tools..."
-apt-get install -y -o Dpkg::Options::="--force-confold" \
-    python3 python3-pip python3-venv python3-dev \
-    git curl wget build-essential ca-certificates >/dev/null 2>&1
+apt_install python3 python3-pip python3-venv python3-dev \
+    git curl wget build-essential ca-certificates \
+    || { echo "❌ Python/toolchain install failed — see the apt error above"; exit 1; }
 
 echo "🧰 Installing the everyday toolbox (so nothing is needed later)..."
-apt-get install -y -o Dpkg::Options::="--force-confold" --no-install-recommends \
-    nodejs npm ripgrep ffmpeg unzip zip tar xz-utils nano openssh-client >/dev/null 2>&1 \
+apt_install --no-install-recommends \
+    nodejs npm ripgrep ffmpeg unzip zip tar xz-utils nano openssh-client \
     || echo "⚠️ some toolbox extras were skipped — core install continues"
 
 # hermes-agent supports Python 3.11–3.14 (requires-python ">=3.11,<3.15").
