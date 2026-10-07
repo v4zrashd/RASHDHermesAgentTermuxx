@@ -8,7 +8,7 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-9146ff?style=for-the-badge)](LICENSE)
 [![Termux](https://img.shields.io/badge/Termux-Android-6f42c1?style=for-the-badge)](https://termux.com)
-[![Version](https://img.shields.io/badge/version-v1.1.0-00ff88?style=for-the-badge)](https://github.com/v4zrashd/RASHDHermesAgentTermuxx)
+[![Version](https://img.shields.io/badge/version-v1.1.1-00ff88?style=for-the-badge)](https://github.com/v4zrashd/RASHDHermesAgentTermuxx)
 [![Made by](https://img.shields.io/badge/made%20by-V4Z%20RASHD-ff00aa?style=for-the-badge)](https://github.com/v4zrashd)
 
 [![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=22&pause=1000&color=00FF88&center=true&vCenter=true&width=650&lines=Your+pocket+AI+assistant+is+here;Self-learning.+Always+with+you.;One+command.+Zero+servers.;Built+by+V4Z+RASHD)](https://git.io/typing-svg)
@@ -171,6 +171,12 @@ hermes
 ```
 
 ---
+
+## 🆕 What's new in v1.1.1
+
+- **Busy-container fix** — an already-installed Ubuntu is now detected from its rootfs on disk, so the installer never tries to reinstall over a running ("busy") container.
+- **Visible, retrying apt** — Ubuntu package installs now show real errors and retry automatically (e.g. while another session holds the dpkg lock) instead of failing silently.
+- Everything else from v1.1.0 below still applies.
 
 ## 🆕 What's new in v1.1.0
 
